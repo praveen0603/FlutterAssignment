@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ScreenProgress.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class ScheduleVideoCallScreen extends StatelessWidget {
   @override
@@ -45,6 +46,12 @@ class _MyVideoCallPageState extends State<MyVideoCallPage> {
   Widget build(BuildContext context) {
     var deviceHeight = MediaQuery.of(context).size.height;
     var deviceWidth = MediaQuery.of(context).size.width;
+    /*final dateFormat = DateFormat("dd/mm/yyyy");
+    final timeFormat = DateFormat("hh:mm a");*/
+    DateTime date;
+    var dateSelected = false;
+    var time = "";
+
     // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.blue[600],
@@ -133,40 +140,58 @@ class _MyVideoCallPageState extends State<MyVideoCallPage> {
                     child: Column(
                       children: <Widget>[
                         Container(
+                          padding: EdgeInsets.all(2),
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Date",
                             style:
-                                TextStyle(fontSize: 12, color: Colors.black54),
+                                TextStyle(fontSize: 14, color: Colors.black54),
                           ),
                         ),
-                        DropdownButton(
-                            underline: DropdownButtonHideUnderline(
-                                child: DropdownButton()),
-                            isExpanded: true,
-                            hint: Text(
-                              "- Choose Date -",
-                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                            ),
-                            items: [
-                              DropdownMenuItem(
-                                value: "1",
-                                child: Text(
-                                  "First",
+                        FlatButton(
+                            onPressed: () {
+                              DatePicker.showDatePicker(context,
+                                  showTitleActions: true,
+                                  minTime: DateTime(2000, 1, 1),
+                                  maxTime: DateTime(2022, 12, 31),
+                                  onChanged: (confdate) {
+                                    setState(() {
+                                      dateSelected = true;
+                                      date = confdate;
+                                    });
+                                print('change $date');
+                              }, onConfirm: (confdate) {
+                                setState(() {
+                                  dateSelected = true;
+                                  date = confdate;
+                                });
+
+                                print('conf $date');
+                              },
+                                  currentTime: DateTime.now(),
+                                  locale: LocaleType.en);
+                            },
+                            padding: EdgeInsets.all(2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    dateSelected ? date.toString():"- Choose Date -",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                              DropdownMenuItem(
-                                value: "2",
-                                child: Text(
-                                  "Second",
-                                ),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                _myActivity = value;
-                              });
-                            }),
+                                Container(
+                                  child: Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              ],
+                            )),
                       ],
                     )),
                 Container(
@@ -180,40 +205,49 @@ class _MyVideoCallPageState extends State<MyVideoCallPage> {
                     child: Column(
                       children: <Widget>[
                         Container(
+                          padding: EdgeInsets.all(2),
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Time",
                             style:
-                                TextStyle(fontSize: 12, color: Colors.black54),
+                                TextStyle(fontSize: 14, color: Colors.black54),
                           ),
                         ),
-                        DropdownButton(
-                            underline: DropdownButtonHideUnderline(
-                                child: DropdownButton()),
-                            isExpanded: true,
-                            hint: Text(
-                              "- Choose Time -",
-                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                            ),
-                            items: [
-                              DropdownMenuItem(
-                                value: "1",
-                                child: Text(
-                                  "First",
+                        FlatButton(
+                            onPressed: () {
+                              DatePicker.showTimePicker(
+                                  context,
+                                showTitleActions: true,
+                                currentTime: DateTime.now(),
+                                onChanged: (date) {
+                                  print('change $date in time zone ' +
+                                      date.timeZoneOffset.inHours.toString());
+                                }, onConfirm: (date) {
+                                print('confirm $date');
+                              },
+                              );
+                            },
+                            padding: EdgeInsets.all(2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    "- Choose Time -",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                              DropdownMenuItem(
-                                value: "2",
-                                child: Text(
-                                  "Second",
-                                ),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                _myActivity = value;
-                              });
-                            }),
+                                Container(
+                                  child: Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              ],
+                            )),
                       ],
                     )),
               ],
